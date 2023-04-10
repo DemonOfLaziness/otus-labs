@@ -1,12 +1,15 @@
 # Configure Router-on-a-Stick Inter-VLAN Routing
 
 Топология сети для данной работы:
+
 ![](netTopology.png)
 
 Таблица адресов:
+
 ![](addrTable.png)
 
 Таблица VLAN:
+
 ![](vlanTable.png)
 
 Objectives
@@ -101,11 +104,11 @@ S1(config)#int e0/2
 S1(config-if)#sw access vlan 3
 S1(config-if)#sw mode access
 ```
-Команды для S1:
+Команды для S2:
 ```
-S1(config)#int e0/1
-S1(config-if)#sw access vlan 4
-S1(config-if)#sw mode access
+S2(config)#int e0/1
+S2(config-if)#sw access vlan 4
+S2(config-if)#sw mode access
 ```
 
 Результаты настройки VLAN
