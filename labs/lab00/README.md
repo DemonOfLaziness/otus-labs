@@ -111,9 +111,11 @@ S1(config-if)#sw mode access
 Результаты настройки VLAN
 
 Для S1
+
 ![](vlanBriefS1.png)
 
 Для S2
+
 ![](vlanBriefS2.png)
 
 ## Part 3: Configure an 802.1Q Trunk Between the Switches
@@ -131,9 +133,11 @@ S1(config)#
 Результат применения команды *show interface trunk*:
 
 Для S1
+
 ![](shIntTrS1.png)
 
 Для S2
+
 ![](shIntTrS2.png)
 
 ### Step 2: Manually configure S1’s trunk interface e0/0
@@ -141,6 +145,7 @@ S1(config)#
 Команды, применённые для настройки trunk на данном этапе аналогичны командам из Step 1. 
 
 Результат применения команды *show interface trunk*:
+
 ![](shIntTrR.png)
 
 **Why does F0/5 not appear in the list of trunks?** – на момент выполнения задания при настройке интерфейса он изначально без дополнительных действий отображается в таблице при использовании команды *show interfaces trunk*. Но если его выключить командой *shutdown*, то из таблицы он пропадёт. Предположу, что порт изначально не поднимался сам, из-за чего в таблице его не было.
@@ -168,17 +173,20 @@ R1(config-subif)#encapsulation dot1Q 8
 R1(config)#
 ```
 Результат применения команды *show ip interface brief*:
+
 ![](shIpIntBr.png)
 
 ## Part 5: Verify Inter-VLAN Routing is Working
 ### Step 1: Complete the following tests from PC-A. All should be successful.
 
 Проверка наличия связи с gateway, PC-B и S2:
+
 ![](testA.png)
 
 ### Step 2: Complete the following test from PC-B.
 
 Результат работы команды traceroute на PC-B:
+
 ![](testA.png)
 
 **What intermediate IP addresses are shown in the results?** - ip-адрес маршрутизатора (точнее, сабинтерфейса на этом маршрутизаторе, "отвечающего" за маршрутизацию пакетов этого vlan), через который проходят пакеты в процессе передачи с PC-A на PC-B.
