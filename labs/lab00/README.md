@@ -187,6 +187,6 @@ R1(config)#
 
 Результат работы команды traceroute на PC-B:
 
-![](testA.png)
+![](testB.png)
 
 **What intermediate IP addresses are shown in the results?** - ip-адрес маршрутизатора (точнее, сабинтерфейса на этом маршрутизаторе, "отвечающего" за маршрутизацию пакетов этого vlan), через который проходят пакеты в процессе передачи с PC-A на PC-B.
