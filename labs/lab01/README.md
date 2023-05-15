@@ -128,7 +128,58 @@ Q: Потому что Root Path Cost у root-порта на S3 была изм
 Q: Портом корневого моста на свиче S2 выбран e0/0, а на свиче S3 – e0/2.
 
 *A: Почему протокол STP выбрал эти порты в качестве портов корневого моста на этих коммутаторах?*  
-Q: Потому что при сравнении портов у выбранных оказалась меньшая стоимость пути до моста, Bridge ID, поэтому сравнение шло по Port ID, который у выбранных портов был наименьшим из сравниваемых.
+Q: Потому что при сравнении портов у выбранных оказалась меньшая стоимость пути до моста, Bridge ID, поэтому сравнение шло по Port ID порта соседнего коммутатора, который у выбранных портов был наименьшим из сравниваемых.  
+
+**Проверка:**
+
+Топология та же, работа идёт с S2 и S1(попытка поменять root-порт на S2)
+
+До начала изменения Port ID портов S1:  
+
+```
+S2#show spanning-tree
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     aabb.cc00.1000
+             Cost        100
+             Port        1 (Ethernet0/0)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     aabb.cc00.2000
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  15  sec
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Et0/0               Root FWD 100       128.1    Shr
+Et0/1               Altn BLK 100       128.2    Shr
+Et0/2               Desg FWD 100       128.3    Shr
+Et0/3               Desg FWD 100       128.4    Shr
+```
+
+После этого на S1 для интерфейса e0/0, который является соседом root-порта e0/0 S2, изменён на больший (192). Итогом становится смена root-порта на S2:  
+
+```
+S2#show spanning-tree
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     aabb.cc00.1000
+             Cost        100
+             Port        2 (Ethernet0/1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     aabb.cc00.2000
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  15  sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Et0/0               Altn BLK 100       128.1    Shr
+Et0/1               Root LRN 100       128.2    Shr
+Et0/2               Desg FWD 100       128.3    Shr
+Et0/3               Desg FWD 100       128.4    Shr
+```
 
 **Вопросы для повторения**  
 
@@ -139,5 +190,5 @@ Q: Root path cost
 Q: Bridge ID полученного с порта BPDU.
 
 *A: Если оба значения на двух портах равны, каким будет следующее значение, которое использует протокол STP при выборе порта?*  
-Q: Port ID самого порта коммутатора.
+Q: Port ID порта коммутатора-соседа.
 
