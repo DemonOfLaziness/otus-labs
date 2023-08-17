@@ -1,0 +1,139 @@
+Building configuration...
+
+Current configuration : 1643 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R24
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$5./G$oDyirC1ssBYQ1vovVJe6V/
+!
+no aaa new-model
+clock timezone utc 3 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!         
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description mgmt
+ ip address 80.0.1.24 255.255.255.255
+ ip router isis 
+!
+interface Ethernet0/0
+ description to_lamas_r21
+ ip address 90.0.0.10 255.255.255.252
+!         
+interface Ethernet0/1
+ description to_r26
+ ip address 80.0.0.14 255.255.255.252
+ ip router isis 
+!
+interface Ethernet0/2
+ description to_r23
+ ip address 80.0.0.2 255.255.255.252
+ ip router isis 
+!
+interface Ethernet0/3
+ description to_spb_r18
+ ip address 80.0.0.18 255.255.255.252
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router isis
+ net 49.0024.8001.2400.0000.00
+ passive-interface default
+ no passive-interface Ethernet0/1
+ no passive-interface Ethernet0/2
+ no passive-interface Loopback0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!         
+control-plane
+!
+!
+!
+!
+!
+!
+banner motd ^CAuthorized access only!^C
+!
+line con 0
+ password 7 13061E010803
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 060506324F41
+ logging synchronous
+ login
+ transport input all
+!
+!
+end
