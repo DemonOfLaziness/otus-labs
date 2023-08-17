@@ -1,0 +1,120 @@
+R19#sh run
+Building configuration...
+
+Current configuration : 1239 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R19
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$MVaM$4ttGw925EZUaoJTF1CIr5.
+!
+no aaa new-model
+clock timezone utc 3 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!         
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description mgmt
+ ip address 192.168.100.19 255.255.255.192
+!
+interface Ethernet0/0
+ description to_r14
+ ip address 10.0.0.38 255.255.255.252
+ ip ospf 1 area 101
+!         
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 192.168.100.19
+ area 101 stub
+ network 192.168.100.0 0.0.0.63 area 101
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!         
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+banner motd ^CAuthorized access only!^C
+!
+line con 0
+ password 7 14141B180F0B
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 05080F1C2243
+ logging synchronous
+ login
+ transport input all
+!         
+!
+end

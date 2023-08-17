@@ -1,0 +1,161 @@
+Building configuration...
+
+Current configuration : 2657 bytes
+!
+! Last configuration change at 12:22:04 utc Thu Aug 17 2023
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname SW5
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$ej3P$HNVda1fFxE/33Y0GLkI800
+!
+no aaa new-model
+clock timezone utc 3 0
+!
+!
+!         
+!
+!
+!
+ip dhcp excluded-address 192.168.2.1
+ip dhcp excluded-address 192.168.3.1
+!
+ip dhcp pool msk_user
+ network 192.168.2.0 255.255.255.0
+ default-router 192.168.2.1 
+ domain-name msk_user
+!
+ip dhcp pool msk_asup
+ network 192.168.3.0 255.255.255.0
+ domain-name msk_asup
+ default-router 192.168.3.1 
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ description po1_to_sw4
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Ethernet0/0
+ description to_sw2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Ethernet0/1
+ description to_sw3
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Ethernet0/2
+ description to_sw4
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+ channel-group 1 mode auto
+!
+interface Ethernet0/3
+ description to_sw4
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+ channel-group 1 mode auto
+!
+interface Ethernet1/0
+ description to_r13
+ no switchport
+ ip address 10.0.0.26 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+!
+interface Ethernet1/1
+ description to_r12
+ no switchport
+ ip address 10.0.0.10 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+!
+interface Ethernet1/2
+ switchport access vlan 300
+ switchport mode access
+ shutdown
+!
+interface Ethernet1/3
+ switchport access vlan 300
+ switchport mode access
+ shutdown
+!
+interface Vlan3
+ description msk_asup_gw
+ ip address 192.168.3.1 255.255.255.0
+!
+interface Vlan100
+ ip address 192.168.100.5 255.255.255.248
+!
+router ospf 1
+ router-id 192.168.100.5
+ passive-interface default
+ no passive-interface Ethernet1/0
+ no passive-interface Ethernet1/1
+ network 192.168.2.0 0.0.1.255 area 10
+ network 192.168.100.0 0.0.0.63 area 10
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!         
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd ^CAuthorized access only!^C
+!
+line con 0
+ password 7 01100F175804
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 13061E010803
+ logging synchronous
+ login
+!
+!
+end
