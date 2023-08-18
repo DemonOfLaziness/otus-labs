@@ -1,0 +1,137 @@
+Building configuration...
+
+Current configuration : 1714 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R17
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$s/30$721Xo3B2hsqvKI5YZye9X0
+!
+no aaa new-model
+clock timezone utc 3 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!         
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description mgmt
+ ip address 192.168.100.68 255.255.255.255
+!
+interface Ethernet0/0
+ description to_sw9
+ ip address 10.0.0.65 255.255.255.252
+!
+interface Ethernet0/1
+ description to_r18
+ ip address 10.0.0.73 255.255.255.252
+!
+interface Ethernet0/2
+ description to_sw10
+ ip address 10.0.0.69 255.255.255.252
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+!
+router eigrp SPB
+ !
+ address-family ipv4 unicast autonomous-system 13
+  !
+  af-interface Ethernet0/1
+   summary-address 10.0.0.64 255.255.255.192
+   summary-address 192.168.6.0 255.255.254.0
+   summary-address 192.168.100.64 255.255.255.192
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.64 0.0.0.63
+  network 192.168.100.64 0.0.0.63
+  eigrp router-id 192.168.100.68
+ exit-address-family
+ !
+ service-family ipv4 autonomous-system 13
+  !
+  topology base
+  exit-sf-topology
+ exit-service-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!         
+!
+!
+!
+!
+!
+banner motd ^CAuthorized access only!^C
+!
+line con 0
+ password 7 104D000A0618
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 104D000A0618
+ logging synchronous
+ login
+ transport input all
+!
+!
+end
