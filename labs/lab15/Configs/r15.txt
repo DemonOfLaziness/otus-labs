@@ -109,7 +109,7 @@ router bgp 1001
  bgp router-id 192.168.100.15
  bgp log-neighbor-changes
  neighbor 60.0.0.1 remote-as 301
- network 192.168.100.15 mask 255.255.255.252
+ network 192.168.100.15 mask 255.255.255.255
 !
 ip forward-protocol nd
 !

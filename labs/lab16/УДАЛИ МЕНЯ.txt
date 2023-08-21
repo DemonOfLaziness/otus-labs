@@ -2,6 +2,8 @@ R14(config)#router bgp 1001
 R14(config-router)#neighbor 192.168.100.15 remote-as 1001
 R14(config-router)#neighbor 192.168.100.15 update-source loopback 0
 
+R15(config-router)#
+*Aug 21 14:46:23.407: %BGP-5-ADJCHANGE: neighbor 192.168.100.14 Up
 ========================
 Настройка eBGP R22 <> R23 
 
@@ -27,4 +29,32 @@ R23(config-router)#neighbor 80.0.1.26 remote-as 520
 R23(config-router)#neighbor 80.0.1.26 update-source loop0
 R23(config-router)#neighbor 80.0.1.24 update-source loop0
 
+=========================================
 
+R15(config)#route-map lamas_prefixes
+R15(config-route-map)#set local-preference 200
+R15(config-route-map)#exit
+R15(config)#router bgp 1001
+R15(config-router)#neighbor 60.0.0.1 route-map lamas_prefixes in
+
+R14#sh ip bgp          
+BGP table version is 6, local router ID is 192.168.100.14
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+ * i 90.0.0.4/30      60.0.0.1                 0    200      0 301 101 i
+ *>                   70.0.0.1                 0             0 101 i
+ *>  192.168.100.14/32
+                       0.0.0.0                  0         32768 i
+ r>i 192.168.100.15/32
+                       192.168.100.15           0    100      0 i
+ * i 192.168.100.69/32
+                       60.0.0.1                 0    200      0 301 520 2042 i
+ *>                   70.0.0.1                               0 101 520 2042 i
+R14#
+
+============================================
