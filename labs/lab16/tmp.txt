@@ -1,0 +1,40 @@
+gw of last resort на r14-15
+подсети линков между провайдерами анонсятся в BGP
+
+
+
+
+
+
+
+
+
+r14
+neighbor 192.168.100.15 remote-as 1001
+ neighbor 192.168.100.15 update-source Loopback0
+
+r15
+neighbor 192.168.100.14 remote-as 1001
+ neighbor 192.168.100.14 update-source Loopback0
+
+r23
+neighbor 80.0.1.24 remote-as 520
+neighbor 80.0.1.24 update-source Loopback0
+neighbor 80.0.1.26 remote-as 520
+neighbor 80.0.1.26 update-source Loopback0
+
+r24
+ network 80.0.0.0 mask 255.255.255.0
+ neighbor ibgp_clients peer-group
+ neighbor ibgp_clients remote-as 520
+ neighbor ibgp_clients update-source Loopback0
+ neighbor ibgp_clients route-reflector-client
+ neighbor ibgp_clients next-hop-self
+neighbor 80.0.1.23 peer-group ibgp_clients
+ neighbor 80.0.1.26 peer-group ibgp_clients
+
+r26
+neighbor 80.0.1.23 remote-as 520
+ neighbor 80.0.1.23 update-source Loopback0
+ neighbor 80.0.1.24 remote-as 520
+ neighbor 80.0.1.24 update-source Loopback0

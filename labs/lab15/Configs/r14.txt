@@ -110,6 +110,7 @@ router bgp 1001
  bgp router-id 192.168.100.14
  bgp log-neighbor-changes
  neighbor 70.0.0.1 remote-as 101
+ network 192.168.100.14 mask 255.255.255.252
 !
 ip forward-protocol nd
 !

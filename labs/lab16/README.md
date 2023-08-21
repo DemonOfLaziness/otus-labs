@@ -119,42 +119,61 @@ R18(config-router)#
 
 ## Организация IP-доступности между пограничными роутерами офиса в Москве и С.-Петербурге
 
-Для организации IP-доступности между двумя офисами необходимо сообщить о подсетях Loopback-ов пограничных маршрутизаторов. Для этого необходимо просто анонсировать их с соответствующих маршрутизаторов.
+Для организации IP-доступности между двумя офисами необходимо, чтобы все промежуточные маршрутизаторы знали о подсети, в которой находятся каналы от офиса к провайдеру, а так же имели связный маршрут до них. Для этого необходимо каждому провайдеру анонсировать свою сеть (в которой как раз и находятся каналы). Подсети имеют маску /24, и на роутерах, которые их анонсируют, точного маршрута такой подсети нет, поэтому дополнительно нужно использовать "костыль" с объявлением подсетей с этой маской на Null0.  
 
-Настройка на R14:  
+Настройка на R22 (провайдер Киторн):  
 ```
-R14(config-router)#network 192.168.100.14 mask 255.255.255.252
+R22(config-router)#network 70.0.0.0 mask 255.255.255.0
+R22(config-router)#exit
+R22(config)#ip route 70.0.0.0 255.255.255.0 Null 0
 ```  
 
-Настройка на R15:  
+Настройка на R21 (провайдер Ламас):  
 ```
-R15(config-router)#network 192.168.100.15 mask 255.255.255.252
+R21(config-router)#network 60.0.0.0 mask 255.255.255.0
+R21(config)#ip route 60.0.0.0 255.255.255.0 Null 0
 ```  
 
-Настройка на R18:  
+Настройка на R24 (провайдер Триада):  
 ```
-R18(config-router)#network 192.168.100.69 mask 255.255.255.252
+R24(config-router)#network 80.0.0.0 mask 255.255.255.0
+R24(config)#ip route 80.0.0.0 255.255.255.0 Null 0
+```  
+
+Настройка на R26 (провайдер Триада):  
+```
+R26(config-router)#network 80.0.0.0 mask 255.255.255.0
+R26(config)#ip route 80.0.0.0 255.255.255.0 Null 0
 ```  
 
 После настройки нужно проверить доступность маршрутизаторов офисов. Для этого нужно пропинговать их друг от друга.  
 
 Результат пинга R18 с R14:  
 ```
-R14#ping 192.168.100.69 source 192.168.100.14
+R14#ping 80.0.0.17
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 192.168.100.69, timeout is 2 seconds:
-Packet sent with a source address of 192.168.100.14 
+Sending 5, 100-byte ICMP Echos to 80.0.0.17, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/2 ms
+R14#
+R14#ping 80.0.0.21
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 80.0.0.21, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 R14#
 ```  
 
 Результат пинга R18 с R15:  
 ```
-R15#ping 192.168.100.69 source 192.168.100.15
+R15#ping 80.0.0.17
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 192.168.100.69, timeout is 2 seconds:
-Packet sent with a source address of 192.168.100.15 
+Sending 5, 100-byte ICMP Echos to 80.0.0.17, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+R15#ping 80.0.0.21
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 80.0.0.21, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 R15#
@@ -162,16 +181,14 @@ R15#
 
 Результат пинга R14 и R15 с R18:  
 ```
-R18#ping 192.168.100.14 source 192.168.100.69
+R18#ping 70.0.0.2
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 192.168.100.14, timeout is 2 seconds:
-Packet sent with a source address of 192.168.100.69 
+Sending 5, 100-byte ICMP Echos to 70.0.0.2, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/2 ms
-R18#ping 192.168.100.15 source 192.168.100.69
+R18#ping 60.0.0.2
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 192.168.100.15, timeout is 2 seconds:
-Packet sent with a source address of 192.168.100.69 
+Sending 5, 100-byte ICMP Echos to 60.0.0.2, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 R18#

@@ -1,0 +1,30 @@
+R14(config)#router bgp 1001
+R14(config-router)#neighbor 192.168.100.15 remote-as 1001
+R14(config-router)#neighbor 192.168.100.15 update-source loopback 0
+
+========================
+Настройка eBGP R22 <> R23 
+
+R22(config-router)#neighbor 90.0.0.6 remote-as 520
+
+R23(config)#router bgp 520
+R23(config-router)#bgp router-id 80.0.1.23
+R23(config-router)#neighbor 90.0.0.5 remote-as 101
+
+настройка iBGP
+
+R24(config-router)#neighbor ibgp_clients peer-group
+R24(config-router)#neighbor ibgp_clients update-source Loop0
+R24(config-router)#neighbor ibgp_clients remote-as 520
+R24(config-router)#neighbor ibgp_clients route-reflector-client
+R24(config-router)#
+R24(config-router)#
+R24(config-router)#neighbor 80.0.1.23 peer-group ibgp_clients
+R24(config-router)#neighbor 80.0.1.26 peer-group ibgp_clients
+
+R23(config-router)#neighbor 80.0.1.24 remote-as 520
+R23(config-router)#neighbor 80.0.1.26 remote-as 520
+R23(config-router)#neighbor 80.0.1.26 update-source loop0
+R23(config-router)#neighbor 80.0.1.24 update-source loop0
+
+

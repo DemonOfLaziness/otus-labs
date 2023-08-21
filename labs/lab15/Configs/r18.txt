@@ -106,6 +106,7 @@ router bgp 2042
  bgp log-neighbor-changes
  neighbor 80.0.0.18 remote-as 520
  neighbor 80.0.0.22 remote-as 520
+ network 192.168.100.69 mask 255.255.255.252
 !
 ip forward-protocol nd
 !
