@@ -1,0 +1,151 @@
+Building configuration...
+
+Current configuration : 2052 bytes
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R18
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$Je.m$GMAcK09w2mRNBU7a32eSN0
+!
+no aaa new-model
+clock timezone utc 3 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!         
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description mgmt
+ ip address 192.168.100.69 255.255.255.255
+!
+interface Ethernet0/0
+ description to_r16
+ ip address 10.0.0.90 255.255.255.252
+!
+interface Ethernet0/1
+ description to_r17
+ ip address 10.0.0.74 255.255.255.252
+!
+interface Ethernet0/2
+ description to_triada_r24
+ ip address 80.0.0.17 255.255.255.252
+!
+interface Ethernet0/3
+ description to_triada_r26
+ ip address 80.0.0.21 255.255.255.252
+!
+!
+router eigrp SPB
+ !
+ address-family ipv4 unicast autonomous-system 13
+  !
+  af-interface Ethernet0/2
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   summary-address 0.0.0.0 0.0.0.0
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   summary-address 0.0.0.0 0.0.0.0
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.64 0.0.0.63
+  network 80.0.0.16 0.0.0.7
+  network 192.168.100.64 0.0.0.63
+  eigrp router-id 192.168.100.69
+ exit-address-family
+!
+router bgp 2042
+ bgp router-id 192.168.100.69
+ bgp log-neighbor-changes
+ network 192.168.6.0 mask 255.255.254.0
+ network 192.168.100.69 mask 255.255.255.255
+ neighbor 80.0.0.18 remote-as 520
+ neighbor 80.0.0.22 remote-as 520
+ maximum-paths 2
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+banner motd ^CAuthorized access only!^C
+!
+line con 0
+ password 7 110A1016141D
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 104D000A0618
+ logging synchronous
+ login
+ transport input all
+!
+!
+end
