@@ -1,4 +1,4 @@
-# BGP. Фильтрация
+# Основные протоколы сети интернет
 
 Актуальные схемы сети и таблиц ip-адресации представлены [тут](https://github.com/DemonOfLaziness/otus-labs/tree/main/labs/lab18/Schemes).  
 Файл лабораторной и основные конфиги представлены [тут](https://github.com/DemonOfLaziness/otus-labs/tree/main/labs/lab18/Configs).  
